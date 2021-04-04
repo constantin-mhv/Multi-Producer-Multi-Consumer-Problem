@@ -1,0 +1,4 @@
+*
+!/tema
+!/tema/*.py
+!.gitignore
