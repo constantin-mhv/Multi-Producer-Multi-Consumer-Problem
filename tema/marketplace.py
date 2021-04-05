@@ -12,6 +12,7 @@ class Marketplace:
     Class that represents the Marketplace. It's the central part of the implementation.
     The producers and consumers use its methods concurrently.
     """
+
     def __init__(self, queue_size_per_producer):
         """
         Constructor
@@ -19,13 +20,22 @@ class Marketplace:
         :type queue_size_per_producer: Int
         :param queue_size_per_producer: the maximum size of a queue associated with each producer
         """
-        pass
+        self.queue_size_per_producer = queue_size_per_producer
+        self.producers = dict()
+        self.carts = dict()
+        self.producers_ids = 0
+        self.carts_ids = 0
 
     def register_producer(self):
         """
         Returns an id for the producer that calls this.
         """
-        pass
+        self.producers_ids = self.producers_ids + 1
+        return self.producers_ids - 1
+
+    def add_producer(self, producer):
+        prod_id = self.register_producer()
+        self.producers[prod_id] = producer
 
     def publish(self, producer_id, product):
         """
@@ -47,7 +57,10 @@ class Marketplace:
 
         :returns an int representing the cart_id
         """
-        pass
+        cart_id = self.carts_ids
+        self.carts_ids = self.carts_ids + 1
+        self.carts[cart_id] = list()
+        return cart_id
 
     def add_to_cart(self, cart_id, product):
         """
@@ -61,6 +74,7 @@ class Marketplace:
 
         :returns True or False. If the caller receives False, it should wait and then try again
         """
+
         pass
 
     def remove_from_cart(self, cart_id, product):
