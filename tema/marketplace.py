@@ -31,11 +31,12 @@ class Marketplace:
         Returns an id for the producer that calls this.
         """
         self.producers_ids = self.producers_ids + 1
-        return self.producers_ids - 1
+        return str(self.producers_ids - 1)
 
     def add_producer(self, producer):
         prod_id = self.register_producer()
         self.producers[prod_id] = producer
+        return prod_id
 
     def publish(self, producer_id, product):
         """
@@ -49,7 +50,7 @@ class Marketplace:
 
         :returns True or False. If the caller receives False, it should wait and then try again.
         """
-        pass
+
 
     def new_cart(self):
         """
