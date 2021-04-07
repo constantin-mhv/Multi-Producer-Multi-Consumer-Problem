@@ -2,3 +2,4 @@
 !/tema
 !/tema/*.py
 !.gitignore
+/tema/t.py
