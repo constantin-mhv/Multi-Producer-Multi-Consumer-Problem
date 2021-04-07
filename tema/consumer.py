@@ -47,20 +47,20 @@ class Consumer(Thread):
         for cart in self.carts:
             card_id = self.marketplace.new_cart()
             carts.append(card_id)
-            for op in cart:
-                for i in range(op["quantity"]):
-                    if op["type"] == "add":
+            for operation in cart:
+                for _ in range(operation["quantity"]):
+                    if operation["type"] == "add":
                         while True:
                             res = self.marketplace. \
-                                add_to_cart(card_id, op["product"])
+                                add_to_cart(card_id, operation["product"])
                             # If it fails to add the product to cart, wait
                             if not res:
                                 time.sleep(self.retry_wait_time)
                             else:
                                 break
-                    elif op["type"] == "remove":
+                    elif operation["type"] == "remove":
                         self.marketplace. \
-                            remove_from_cart(card_id, op["product"])
+                            remove_from_cart(card_id, operation["product"])
         # Printing all purchased products
         for cart_id in carts:
             cart = self.marketplace.place_order(cart_id)

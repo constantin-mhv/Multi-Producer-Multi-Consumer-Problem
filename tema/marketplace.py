@@ -142,8 +142,8 @@ class Marketplace:
         cart = self.carts[cart_id]
         i = 0
         # products in cart are stored as pairs (prod_id, product)
-        for pr in cart:
-            if pr[1] == product:
+        for prod in cart:
+            if prod[1] == product:
                 break
             i = i + 1
         removed_product = cart.pop(i)
@@ -159,5 +159,5 @@ class Marketplace:
         :return a list with all the products in the cart
         """
         res = list()
-        [res.append(cart[1]) for cart in self.carts[cart_id]]
+        _ = [res.append(cart[1]) for cart in self.carts[cart_id]]
         return res

@@ -10,22 +10,6 @@ from threading import Thread
 import time
 
 
-class ProductInfo:
-    def __init__(self, product_tuple):
-        self.product = product_tuple[0]
-        self.num = product_tuple[1]
-        self.time_to_wait = product_tuple[2]
-
-    def produce_one(self):
-        self.num = self.num - 1
-
-    def finished_work(self):
-        if self.num == 0:
-            return True
-        else:
-            return False
-
-
 class Producer(Thread):
     """
     Class that represents a producer.
