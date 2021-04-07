@@ -48,17 +48,14 @@ class Producer(Thread):
         @type kwargs:
         @param kwargs: other arguments that are passed to the Thread's __init__()
         """
-        # Thread.__init__(self)
         Thread.__init__(self, daemon=kwargs["daemon"])
         # Thread.__init__(self, daemon=False)
         self.products = products
-        # for p in products:
-        #     self.products.insert(0, ProductInfo(p))
         self.copy_products = self.products.copy()
         self.marketplace = marketplace
         self.republish_wait_time = republish_wait_time
         self.prod_name = kwargs["name"]
-        self.prod_id = self.marketplace.add_producer(self)
+        self.prod_id = self.marketplace.add_producer()
 
     def run(self):
         i = 0

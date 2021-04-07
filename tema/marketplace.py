@@ -5,6 +5,7 @@ Computer Systems Architecture Course
 Assignment 1
 March 2021
 """
+import threading
 
 
 class Marketplace:
@@ -25,15 +26,17 @@ class Marketplace:
         self.carts = dict()
         self.producers_ids = 0
         self.carts_ids = 0
+        self.lock = threading.Lock()
 
     def register_producer(self):
         """
         Returns an id for the producer that calls this.
         """
-        self.producers_ids = self.producers_ids + 1
+        with self.lock:
+            self.producers_ids = self.producers_ids + 1
         return str(self.producers_ids - 1)
 
-    def add_producer(self, producer):
+    def add_producer(self):
         prod_id = self.register_producer()
         self.producers[prod_id] = list()
         return prod_id
@@ -50,8 +53,6 @@ class Marketplace:
 
         :returns True or False. If the caller receives False, it should wait and then try again.
         """
-        # TODO: add lock publish()
-        # print("publish!! ", j, product)
         prod_storage = self.producers[producer_id]
         if len(prod_storage) == self.queue_size_per_producer:
             return False
@@ -59,13 +60,12 @@ class Marketplace:
         return True
 
     def return_product(self, producer_id, product):
-        # TODO: add lock return_product()
         prod_storage = self.producers[producer_id]
         prod_storage.append(product)
 
     def register_cart(self):
-        # TODO: add lock register_cart() or not?
-        self.carts_ids = self.carts_ids + 1
+        with self.lock:
+            self.carts_ids = self.carts_ids + 1
         return self.carts_ids - 1
 
     def new_cart(self):
@@ -74,7 +74,6 @@ class Marketplace:
 
         :returns an int representing the cart_id
         """
-        # TODO: add lock new_cart()
         cart_id = self.register_cart()
         self.carts[cart_id] = list()
         return cart_id
@@ -91,11 +90,11 @@ class Marketplace:
 
         :returns True or False. If the caller receives False, it should wait and then try again
         """
-        # TODO: lock add_product()
         for prod_id, producer_storage in self.producers.items():
             try:
-                i = producer_storage.index(product)
-                bought_product = producer_storage.pop(i)
+                with self.lock:
+                    i = producer_storage.index(product)
+                    bought_product = producer_storage.pop(i)
                 cart = self.carts[cart_id]
                 cart.append((prod_id, bought_product))
                 return True
@@ -132,7 +131,6 @@ class Marketplace:
         """
         res = list()
         [res.append(cart[1]) for cart in self.carts[cart_id]]
-        # print(res)
         return res
 
     def print_products(self, prod_id, prod_name):
