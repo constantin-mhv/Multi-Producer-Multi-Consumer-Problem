@@ -1,4 +1,13 @@
 *
 !/tema
 !/tema/*.py
+!/tests
+!/tests/*
+!/test-gen
+!/test-gen/*
 !.gitignore
+!/README
+!/*.sh
+!/parse.awk
+!/pylintrc
+!/*.py

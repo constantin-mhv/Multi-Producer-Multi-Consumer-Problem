@@ -1,0 +1,36 @@
+Project nr 1
+
+Marketplace creates for every producer a buffer where will be placed
+producer products. Producers buffers are stored in dictionary
+producers(key:prod_id, value:products), where prod_id is an string and products
+is a list with products.
+Consumers carts are stored in a similar way:
+carts(key:cart_id, value:products), where cart_id is an Int and products is a
+list with pairs (prod_id, product). Prod_id is useful for returning procedure,
+when products are placed back to producers buffer.
+Every producer has a finite buffer. publish() method is called for adding a
+product. If buffer is full, this method will not add a product and False will
+be returned.
+Producers in __init__() function call add_producer() method. In this way they
+"register" in marketplace and get unique prod_id.
+When consumers create a new cart, they call new_cart() method. In this way they
+register carts in marketplace and get unique cart_id.
+Producers in run() method have an infinite while loop, in which they "produce"
+products according to their production plan. In case of a failed attempt to
+add a product, they wait specified time and try again. After producing
+a product they rest for the specified time.
+Consumers in run() method have a while loop which will end after consumer
+adds to cart all products from shopping list. If a product is not yet
+available, they wait for the specified time.
+
+In the marketplace is used a lock for synchronization. This lock is used in
+methods which create new ids for producers and carts, because simple
+non-atomic operation '+' is executed. Also, a lock is used when a product
+is added to cart:
+with self.lock:
+    i = producer_storage.index(product)
+    bought_product = producer_storage.pop(i)
+In this situation, it is possible that after the found index i, pop() will
+be executed with the already modified list by another thread.
+There is no need to use a lock when working with lists and dictionaries,
+because this data structures are thread-safe.
