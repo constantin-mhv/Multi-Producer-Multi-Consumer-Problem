@@ -10,8 +10,8 @@ import threading
 
 class Marketplace:
     """
-    Class that represents the Marketplace. It's the central part of the implementation.
-    The producers and consumers use its methods concurrently.
+    Class that represents the Marketplace. It's the central part of the
+    implementation. The producers and consumers use its methods concurrently.
     """
 
     def __init__(self, queue_size_per_producer):
@@ -19,7 +19,8 @@ class Marketplace:
         Constructor
 
         :type queue_size_per_producer: Int
-        :param queue_size_per_producer: the maximum size of a queue associated with each producer
+        :param queue_size_per_producer: the maximum size of a queue
+        associated with each producer
         """
         self.queue_size_per_producer = queue_size_per_producer
         self.producers = dict()
@@ -31,12 +32,19 @@ class Marketplace:
     def register_producer(self):
         """
         Returns an id for the producer that calls this.
+
+        :return: id assigned to the producer
         """
         with self.lock:
             self.producers_ids = self.producers_ids + 1
         return str(self.producers_ids - 1)
 
     def add_producer(self):
+        """
+        Adds producer to the marketplace's database
+
+        :return: id assigned to the producer
+        """
         prod_id = self.register_producer()
         self.producers[prod_id] = list()
         return prod_id
@@ -51,7 +59,8 @@ class Marketplace:
         :type product: Product
         :param product: the Product that will be published in the Marketplace
 
-        :returns True or False. If the caller receives False, it should wait and then try again.
+        :returns True or False. If the caller receives False, it should wait
+        and then try again.
         """
         prod_storage = self.producers[producer_id]
         if len(prod_storage) == self.queue_size_per_producer:
@@ -60,10 +69,24 @@ class Marketplace:
         return True
 
     def return_product(self, producer_id, product):
+        """
+        Returns product to the producer storage
+
+        :type producer_id: String
+        :param producer_id: producer id
+
+        :type product: Product
+        :param product: product to be returned
+        """
         prod_storage = self.producers[producer_id]
         prod_storage.append(product)
 
     def register_cart(self):
+        """
+        Returns an id for the new cart
+
+        :return: cart id
+        """
         with self.lock:
             self.carts_ids = self.carts_ids + 1
         return self.carts_ids - 1
@@ -88,10 +111,12 @@ class Marketplace:
         :type product: Product
         :param product: the product to add to cart
 
-        :returns True or False. If the caller receives False, it should wait and then try again
+        :returns True or False. If the caller receives False, it should wait
+        and then try again
         """
         for prod_id, producer_storage in self.producers.items():
             try:
+                # If product is in producer storage, put it in cart
                 with self.lock:
                     i = producer_storage.index(product)
                     bought_product = producer_storage.pop(i)
@@ -99,6 +124,7 @@ class Marketplace:
                 cart.append((prod_id, bought_product))
                 return True
             except ValueError:
+                # Else try other producer storage
                 continue
 
         return False
@@ -115,6 +141,7 @@ class Marketplace:
         """
         cart = self.carts[cart_id]
         i = 0
+        # products in cart are stored as pairs (prod_id, product)
         for pr in cart:
             if pr[1] == product:
                 break
@@ -128,20 +155,9 @@ class Marketplace:
 
         :type cart_id: Int
         :param cart_id: id cart
+
+        :return a list with all the products in the cart
         """
         res = list()
         [res.append(cart[1]) for cart in self.carts[cart_id]]
         return res
-
-    def print_products(self, prod_id, prod_name):
-        print(prod_name, end=":\n")
-        prod_list = self.producers[prod_id]
-        for p in prod_list:
-            print(p)
-
-    def print_all_products(self):
-        for prod_id, prod in self.producers.items():
-            for p in prod:
-                print(prod_id, p, "size:", len(prod), end='')
-
-        print("")

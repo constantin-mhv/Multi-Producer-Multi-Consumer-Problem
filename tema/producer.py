@@ -49,21 +49,18 @@ class Producer(Thread):
         @param kwargs: other arguments that are passed to the Thread's __init__()
         """
         Thread.__init__(self, daemon=kwargs["daemon"])
-        # Thread.__init__(self, daemon=False)
         self.products = products
-        self.copy_products = self.products.copy()
         self.marketplace = marketplace
         self.republish_wait_time = republish_wait_time
         self.prod_name = kwargs["name"]
         self.prod_id = self.marketplace.add_producer()
 
     def run(self):
+        """
+        The entry point for a thread.
+        """
         i = 0
-        k = -1
         while True:
-            k = k + 1
-            # if k == 6:
-            #     break
             product_info = self.products[i]
             product = product_info[0]
             num = product_info[1]
@@ -78,6 +75,6 @@ class Producer(Thread):
                         break
                 time.sleep(time_to_wait)
             i = i + 1
+            # if the production plan is over, start from the beginning
             if i == len(self.products):
                 i = 0
-        # self.marketplace.print_products(self.prod_id, self.prod_name)
