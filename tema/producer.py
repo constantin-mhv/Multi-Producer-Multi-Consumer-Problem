@@ -49,8 +49,8 @@ class Producer(Thread):
         @param kwargs: other arguments that are passed to the Thread's __init__()
         """
         # Thread.__init__(self)
-        # Thread.__init__(self, daemon=kwargs["daemon"])
-        Thread.__init__(self, daemon=False)
+        Thread.__init__(self, daemon=kwargs["daemon"])
+        # Thread.__init__(self, daemon=False)
         self.products = products
         # for p in products:
         #     self.products.insert(0, ProductInfo(p))
@@ -65,8 +65,8 @@ class Producer(Thread):
         k = -1
         while True:
             k = k + 1
-            if k == 6:
-                break
+            # if k == 6:
+            #     break
             product_info = self.products[i]
             product = product_info[0]
             num = product_info[1]

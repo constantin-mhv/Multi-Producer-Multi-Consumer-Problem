@@ -39,8 +39,10 @@ class Consumer(Thread):
         self.cons_name = kwargs["name"]
 
     def run(self):
+        carts = list()
         for cart in self.carts:
             card_id = self.marketplace.new_cart()
+            carts.append(card_id)
             for op in cart:
                 for i in range(op["quantity"]):
                     if op["type"] == "add":
@@ -52,4 +54,8 @@ class Consumer(Thread):
                                 break;
                     elif op["type"] == "remove":
                         self.marketplace.remove_from_cart(card_id, op["product"])
+        for cart_id in carts:
+            cart = self.marketplace.place_order(cart_id)
+            for product in cart:
+                print(self.cons_name, "bought", product)
 

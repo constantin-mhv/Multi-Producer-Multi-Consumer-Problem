@@ -132,7 +132,7 @@ class Marketplace:
         """
         res = list()
         [res.append(cart[1]) for cart in self.carts[cart_id]]
-        print(res)
+        # print(res)
         return res
 
     def print_products(self, prod_id, prod_name):
@@ -140,3 +140,10 @@ class Marketplace:
         prod_list = self.producers[prod_id]
         for p in prod_list:
             print(p)
+
+    def print_all_products(self):
+        for prod_id, prod in self.producers.items():
+            for p in prod:
+                print(prod_id, p, "size:", len(prod), end='')
+
+        print("")
