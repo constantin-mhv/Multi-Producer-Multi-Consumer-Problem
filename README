@@ -1,5 +1,3 @@
-Project nr 1
-
 Marketplace creates for every producer a buffer where will be placed
 producer products. Producers buffers are stored in dictionary
 producers(key:prod_id, value:products), where prod_id is an string and products
